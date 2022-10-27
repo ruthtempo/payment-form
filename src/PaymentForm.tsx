@@ -1,12 +1,15 @@
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
-import imageLog from "./media/originalimage2.png";
+import { Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { CreditCard, InfoCircleFill } from "react-bootstrap-icons";
+import imageLog from "./media/payment.png";
 
 export const PaymentForm = () => {
   return (
     <Card className="mt-4">
       <Card.Body className="d-flex flex-column align-items-center">
         <Card.Img src={imageLog} className="w-25" />
-        <Card.Title className="text-center mt-3">Payment Info</Card.Title>
+        <Card.Title className="text-center mt-3 display-5">
+          Payment Info
+        </Card.Title>
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>Full Name</Form.Label>
@@ -14,7 +17,16 @@ export const PaymentForm = () => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Card Number</Form.Label>
-            <Form.Control type="text" placeholder="1234 1234 1234 1234" />
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="1234 1234 1234 1234"
+                className="border-end-0"
+              />
+              <InputGroup.Text className="bg-white">
+                <CreditCard fill="lightgrey" />
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Row>
             <Col>
@@ -26,7 +38,16 @@ export const PaymentForm = () => {
             <Col>
               <Form.Group className="mb-3">
                 <Form.Label>CVV</Form.Label>
-                <Form.Control type="text" placeholder="..." />
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder="..."
+                    className="border-end-0"
+                  />
+                  <InputGroup.Text className="bg-white">
+                    <InfoCircleFill fill="lightgrey" />
+                  </InputGroup.Text>
+                </InputGroup>
               </Form.Group>
             </Col>
           </Row>

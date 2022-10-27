@@ -3,9 +3,9 @@ import { PaymentForm } from "./PaymentForm";
 
 function App() {
   return (
-    <Container className="h-100">
+    <Container className="min-vh-100 d-flex align-items-center justify-content-center">
       <Row>
-        <Col lg={{ span: 4, offset: 4 }}>
+        <Col md={{ span: 6, offset: 3 }} xxl={{ span: 6, offset: 3 }}>
           <PaymentForm />
         </Col>
       </Row>
