@@ -1,5 +1,5 @@
 import { Row, Col, Container } from "react-bootstrap";
-import { PaymentForm } from "./PaymentForm";
+import { PaymentForm } from "./components/PaymentForm";
 
 function App() {
   return (
