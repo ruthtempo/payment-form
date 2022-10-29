@@ -27,6 +27,7 @@ export const PaymentForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getFieldState,
     watch,
     reset,
   } = useForm<PaymentDetails>();
@@ -52,6 +53,7 @@ export const PaymentForm = () => {
                 pattern: /[a-zA-Z]/,
               })}
               isInvalid={!!errors.fullName}
+              isValid={getFieldState("fullName").isTouched && !errors.fullName}
             />
             <ErrorMessage
               as={<FormControl.Feedback type="invalid" />}
@@ -72,8 +74,19 @@ export const PaymentForm = () => {
                   required: "This field is required",
                 })}
                 isInvalid={!!errors.cardNumber}
+                isValid={
+                  getFieldState("cardNumber").isTouched && !errors.cardNumber
+                }
               />
-              <InputGroup.Text className="bg-white border-danger rounded-end">
+              <InputGroup.Text
+                className={`bg-white ${
+                  errors.cardNumber
+                    ? "border-danger rounded-end"
+                    : getFieldState("cardNumber").isTouched
+                    ? "border-success rounded-end"
+                    : ""
+                }`}
+              >
                 <CreditCard fill="lightgrey" />
               </InputGroup.Text>
               <ErrorMessage
@@ -84,7 +97,7 @@ export const PaymentForm = () => {
             </InputGroup>
           </Form.Group>
           <Row>
-            <Col>
+            <Col className="w-50">
               <Form.Group className="mb-3">
                 <Form.Label>Expiration</Form.Label>
                 <Form.Control
@@ -92,6 +105,10 @@ export const PaymentForm = () => {
                   placeholder="MM/YY"
                   {...register("expirationDate", { required: true })}
                   isInvalid={!!errors.expirationDate}
+                  isValid={
+                    getFieldState("expirationDate").isTouched &&
+                    !errors.expirationDate
+                  }
                 />
                 <ErrorMessage
                   as={<FormControl.Feedback type="invalid" />}
@@ -100,7 +117,7 @@ export const PaymentForm = () => {
                 />
               </Form.Group>
             </Col>
-            <Col>
+            <Col className="w-50">
               <Form.Group className="mb-3">
                 <Form.Label>CVV</Form.Label>
                 <InputGroup>
@@ -114,8 +131,17 @@ export const PaymentForm = () => {
                       pattern: { value: /\d{3}/, message: "CVV has 3 digits" },
                     })}
                     isInvalid={!!errors.cvv}
+                    isValid={getFieldState("cvv").isTouched && !errors.cvv}
                   />
-                  <InputGroup.Text className="bg-white border-danger rounded-end">
+                  <InputGroup.Text
+                    className={`bg-white ${
+                      errors.cvv
+                        ? "border-danger rounded-end"
+                        : getFieldState("cvv").isTouched
+                        ? "border-success rounded-end"
+                        : ""
+                    }`}
+                  >
                     <InfoCircleFill fill="lightgrey" />
                   </InputGroup.Text>
                   <ErrorMessage
@@ -134,7 +160,7 @@ export const PaymentForm = () => {
               placeholder="Your Zip"
               {...register("zipCode", { required: "A zip code is required" })}
               isInvalid={!!errors.zipCode}
-              isValid={!errors.zipCode}
+              isValid={getFieldState("zipCode").isTouched && !errors.zipCode}
             />
             <ErrorMessage
               as={<FormControl.Feedback type="invalid" />}
