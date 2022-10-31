@@ -22,6 +22,23 @@ type PaymentDetails = {
   zipCode: string;
 };
 
+const formatCardNum = (cardNum: string) => {
+  const arr = cardNum.split("").filter((num) => num !== " ");
+  let final: string = "";
+
+  let count = 0;
+  for (let i = 0; i < arr.length; i++) {
+    count++;
+    if (count === 5) {
+      final = final.concat(" " + arr[i]);
+      count = 1;
+    } else {
+      final = final.concat(arr[i]);
+    }
+  }
+  return final;
+};
+
 export const PaymentForm = () => {
   const {
     register,
@@ -29,11 +46,13 @@ export const PaymentForm = () => {
     formState: { errors },
     getFieldState,
     watch,
-    reset,
   } = useForm<PaymentDetails>();
 
-  const cardNr = watch("cardNumber");
-  const onSubmit = (data: PaymentDetails) => {};
+  const onSubmit = (data: PaymentDetails) => {
+    console.log(data);
+  };
+
+  const cardNum = watch("cardNumber");
 
   return (
     <Card className="my-4 shadow-lg">
@@ -60,7 +79,6 @@ export const PaymentForm = () => {
               errors={errors}
               name="fullName"
             />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Card Number</Form.Label>
@@ -69,9 +87,12 @@ export const PaymentForm = () => {
                 type="text"
                 maxLength={19}
                 placeholder="1234 1234 1234 1234"
+                value={cardNum}
                 className="border-end-0"
                 {...register("cardNumber", {
                   required: "This field is required",
+                  setValueAs: formatCardNum,
+                  pattern: /^[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
                 })}
                 isInvalid={!!errors.cardNumber}
                 isValid={
@@ -101,9 +122,12 @@ export const PaymentForm = () => {
               <Form.Group className="mb-3">
                 <Form.Label>Expiration</Form.Label>
                 <Form.Control
-                  type="month"
+                  maxLength={5}
+                  type="text"
                   placeholder="MM/YY"
-                  {...register("expirationDate", { required: true })}
+                  {...register("expirationDate", {
+                    required: true,
+                  })}
                   isInvalid={!!errors.expirationDate}
                   isValid={
                     getFieldState("expirationDate").isTouched &&
