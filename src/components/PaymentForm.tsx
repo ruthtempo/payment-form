@@ -1,5 +1,4 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { useEffect } from "react";
 import {
   Button,
   Card,
@@ -17,7 +16,7 @@ import "./paymentForm.css";
 type PaymentDetails = {
   fullName: string;
   cardNumber: string;
-  expirationDate: Date;
+  expirationDate: string;
   cvv: number;
   zipCode: string;
 };
@@ -39,6 +38,30 @@ const formatCardNum = (cardNum: string) => {
   return final;
 };
 
+const formatExpirationDate = (date: string) => {
+  const arr = date.split("").filter((e) => e.match(/^[0-9]/));
+
+  let count = 0;
+  let finalStr = "";
+  for (let i = 0; i < arr.length; i++) {
+    count++;
+    if (count === 3) {
+      finalStr = finalStr.concat(`/${arr[i]}`);
+    } else {
+      finalStr = finalStr.concat(arr[i]);
+    }
+  }
+
+  return finalStr;
+};
+
+console.log(
+  `input: 8888, expected: 88/88, actual:${formatExpirationDate("8888")}`
+);
+console.log(
+  `input: 88/88, expected: 88/88, actual:${formatExpirationDate("88/88")}`
+);
+
 export const PaymentForm = () => {
   const {
     register,
@@ -53,6 +76,7 @@ export const PaymentForm = () => {
   };
 
   const cardNum = watch("cardNumber");
+  const expirDate = watch("expirationDate");
 
   return (
     <Card className="my-4 shadow-lg">
@@ -69,7 +93,7 @@ export const PaymentForm = () => {
               placeholder="Your Name"
               {...register("fullName", {
                 required: "This field is required",
-                pattern: /[a-zA-Z]/,
+                pattern: /^[a-zA-Z ]+$/,
               })}
               isInvalid={!!errors.fullName}
               isValid={getFieldState("fullName").isTouched && !errors.fullName}
@@ -124,9 +148,15 @@ export const PaymentForm = () => {
                 <Form.Control
                   maxLength={5}
                   type="text"
+                  value={expirDate}
                   placeholder="MM/YY"
                   {...register("expirationDate", {
                     required: true,
+                    pattern: {
+                      value: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
+                      message: "invalid month or year",
+                    },
+                    setValueAs: formatExpirationDate,
                   })}
                   isInvalid={!!errors.expirationDate}
                   isValid={
