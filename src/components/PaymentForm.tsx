@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
+import { useEffect } from "react";
 import {
   Button,
   Card,
@@ -39,41 +40,32 @@ const formatCardNum = (cardNum: string) => {
 };
 
 const formatExpirationDate = (date: string) => {
-  const arr = date.split("").filter((e) => e.match(/^[0-9]/));
-
-  let count = 0;
-  let finalStr = "";
-  for (let i = 0; i < arr.length; i++) {
-    count++;
-    if (count === 3) {
-      finalStr = finalStr.concat(`/${arr[i]}`);
-    } else {
-      finalStr = finalStr.concat(arr[i]);
-    }
-  }
-
-  return finalStr;
+  return date
+    .split("")
+    .filter((e) => e.match(/^[0-9]/))
+    .map((e, i) => (i === 2 ? `/${e}` : e))
+    .join("");
 };
-
-console.log(
-  `input: 8888, expected: 88/88, actual:${formatExpirationDate("8888")}`
-);
-console.log(
-  `input: 88/88, expected: 88/88, actual:${formatExpirationDate("88/88")}`
-);
 
 export const PaymentForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     getFieldState,
+    reset,
     watch,
   } = useForm<PaymentDetails>();
 
   const onSubmit = (data: PaymentDetails) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
   const cardNum = watch("cardNumber");
   const expirDate = watch("expirationDate");
@@ -116,7 +108,10 @@ export const PaymentForm = () => {
                 {...register("cardNumber", {
                   required: "This field is required",
                   setValueAs: formatCardNum,
-                  pattern: /^[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
+                  pattern: {
+                    value: /^[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
+                    message: "Only numbers are allowed",
+                  },
                 })}
                 isInvalid={!!errors.cardNumber}
                 isValid={
@@ -154,7 +149,7 @@ export const PaymentForm = () => {
                     required: true,
                     pattern: {
                       value: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
-                      message: "invalid month or year",
+                      message: "Invalid expiration date",
                     },
                     setValueAs: formatExpirationDate,
                   })}
