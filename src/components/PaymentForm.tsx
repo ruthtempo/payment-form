@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -8,6 +8,7 @@ import {
   FormControl,
   InputGroup,
   Row,
+  Spinner,
 } from "react-bootstrap";
 import { CreditCard, InfoCircleFill, LockFill } from "react-bootstrap-icons";
 import { useForm } from "react-hook-form";
@@ -23,7 +24,7 @@ type PaymentDetails = {
 };
 
 const formatCardNum = (cardNum: string) => {
-  const arr = cardNum.split("").filter((num) => num !== " ");
+  const arr = cardNum.split("").filter((num) => num.match(/^[0-9]/));
   let final: string = "";
 
   let count = 0;
@@ -55,23 +56,41 @@ export const PaymentForm = () => {
     getFieldState,
     reset,
     watch,
-  } = useForm<PaymentDetails>();
+  } = useForm<PaymentDetails>({
+    defaultValues: {
+      fullName: "de",
+      cardNumber: "1111111111111111",
+      expirationDate: "1212",
+      cvv: 123,
+      zipCode: "1",
+    },
+  });
 
   const onSubmit = (data: PaymentDetails) => {
     console.log(data);
   };
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-  }, [isSubmitSuccessful]);
-
   const cardNum = watch("cardNumber");
   const expirDate = watch("expirationDate");
 
+  const buttonRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      setIsAnimated(true);
+      const timer = setTimeout(() => {
+        setIsThanks(true);
+        reset();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitSuccessful]);
+
+  const [isAnimated, setIsAnimated] = useState(false); //is submitting button
+  const [isThanks, setIsThanks] = useState(false);
+
   return (
-    <Card className="my-4 shadow-lg">
+    <Card className="my-4 shadow-lg overflow-hidden">
       <Card.Body className="d-flex flex-column align-items-center">
         <Card.Img src={imageLog} className="w-25" />
         <Card.Title className="text-center mb-3 display-6">
@@ -108,10 +127,7 @@ export const PaymentForm = () => {
                 {...register("cardNumber", {
                   required: "This field is required",
                   setValueAs: formatCardNum,
-                  pattern: {
-                    value: /^[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
-                    message: "Only numbers are allowed",
-                  },
+                  pattern: /^[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
                 })}
                 isInvalid={!!errors.cardNumber}
                 isValid={
@@ -217,19 +233,31 @@ export const PaymentForm = () => {
               name="zipCode"
             />
           </Form.Group>
-
-          <Button
-            type="submit"
-            className="mb-2 w-100 confirmPaymentButton border-white"
-          >
-            <div className="d-flex align-items-center justify-content-center">
-              <LockFill className="me-2" />
-              Confirm Payment
+          <div className="d-flex flex-column align-items-center">
+            <Button
+              type="submit"
+              className={`confirmPaymentButton mb-2 p-2 border-0 d-flex align-items-center justify-content-center ${
+                isAnimated
+                  ? "rounded-circle roundedButton"
+                  : "rounded-pill w-100"
+              }`}
+            >
+              {isAnimated ? (
+                <Spinner variant="light" animation="border" size="sm" />
+              ) : (
+                <>
+                  <LockFill className="me-2" />
+                  Confirm Payment
+                </>
+              )}
+            </Button>
+            <p className="fw-lighter d-flex justify-content-center">
+              You verify that this info is correct
+            </p>
+            <div className={`${isThanks ? "thanksMode" : "visually-hidden"}`}>
+              <p>Thank you for your purrrrrchase!</p>
             </div>
-          </Button>
-          <p className="fw-lighter d-flex justify-content-center">
-            You verify that this info is correct
-          </p>
+          </div>
         </Form>
       </Card.Body>
     </Card>
