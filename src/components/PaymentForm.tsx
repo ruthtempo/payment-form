@@ -14,6 +14,7 @@ import { CreditCard, InfoCircleFill, LockFill } from "react-bootstrap-icons";
 import { useForm } from "react-hook-form";
 import imageLog from "../media/payment.png";
 import "./paymentForm.css";
+import flag from "../media/flag.png";
 
 type PaymentDetails = {
   fullName: string;
@@ -273,7 +274,16 @@ export const PaymentForm = () => {
               }`}
               style={{ top: y, left: x }}
             >
-              <p>Thank you for your purrrrrchase!</p>
+              <div className="h-100 d-flex flex-column align-items-center justify-content-center text-white">
+                <img
+                  src={flag}
+                  alt="flag"
+                  width="50%"
+                  className="img-fluid mb-4"
+                />
+                <h4>Thank you!</h4>
+                <p>Your purchase was successful.</p>
+              </div>
             </div>
           </div>
         </Form>
