@@ -274,7 +274,7 @@ export const PaymentForm = () => {
               }`}
               style={{ top: y, left: x }}
             >
-              <div className="h-100 d-flex flex-column align-items-center justify-content-center text-white">
+              <div className="successText h-100 d-flex flex-column align-items-center justify-content-center text-white">
                 <img
                   src={flag}
                   alt="flag"
