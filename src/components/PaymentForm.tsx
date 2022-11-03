@@ -72,22 +72,34 @@ export const PaymentForm = () => {
   const cardNum = watch("cardNumber");
   const expirDate = watch("expirationDate");
 
-  const buttonRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (isSubmitSuccessful) {
       setIsAnimated(true);
+
+      const timer2 = setTimeout(() => {
+        getPosition();
+      }, 1000);
       const timer = setTimeout(() => {
         setIsThanks(true);
         reset();
-      }, 3000);
-
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isSubmitSuccessful]);
 
   const [isAnimated, setIsAnimated] = useState(false); //is submitting button
   const [isThanks, setIsThanks] = useState(false);
+  const [x, setX] = useState<number | undefined>();
+  const [y, setY] = useState<number | undefined>();
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const getPosition = () => {
+    const x = buttonRef.current?.offsetLeft;
+    setX(x);
+
+    const y = buttonRef.current?.offsetTop;
+    setY(y);
+  };
 
   return (
     <Card className="my-4 shadow-lg overflow-hidden">
@@ -235,11 +247,12 @@ export const PaymentForm = () => {
           </Form.Group>
           <div className="d-flex flex-column align-items-center">
             <Button
+              ref={buttonRef}
               type="submit"
-              className={`confirmPaymentButton mb-2 p-2 border-0 d-flex align-items-center justify-content-center ${
+              className={`confirmPaymentButton mb-2 border-0 d-flex align-items-center justify-content-center ${
                 isAnimated
                   ? "rounded-circle roundedButton"
-                  : "rounded-pill w-100"
+                  : "rounded-pill w-100 p-2"
               }`}
             >
               {isAnimated ? (
@@ -254,7 +267,12 @@ export const PaymentForm = () => {
             <p className="fw-lighter d-flex justify-content-center">
               You verify that this info is correct
             </p>
-            <div className={`${isThanks ? "thanksMode" : "visually-hidden"}`}>
+            <div
+              className={`${
+                isThanks ? "thanksMode" : "opac rounded-circle roundedButton"
+              }`}
+              style={{ top: y, left: x }}
+            >
               <p>Thank you for your purrrrrchase!</p>
             </div>
           </div>
