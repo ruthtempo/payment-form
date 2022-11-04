@@ -75,21 +75,21 @@ export const PaymentForm = () => {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      setIsAnimated(true);
+      setIsPending(true);
 
       const timer2 = setTimeout(() => {
         getPosition();
       }, 1000);
       const timer = setTimeout(() => {
-        setIsThanks(true);
+        setIsSuccess(true);
         reset();
       }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isSubmitSuccessful]);
 
-  const [isAnimated, setIsAnimated] = useState(false); //is submitting button
-  const [isThanks, setIsThanks] = useState(false);
+  const [isPending, setIsPending] = useState(false); //is submitting button
+  const [isSuccess, setIsSuccess] = useState(false);
   const [x, setX] = useState<number | undefined>();
   const [y, setY] = useState<number | undefined>();
 
@@ -103,7 +103,15 @@ export const PaymentForm = () => {
   };
 
   return (
-    <Card className="my-4 shadow-lg overflow-hidden">
+    <Card
+      className={`
+        my-4
+        shadow-lg
+        overflow-hidden
+        ${isSuccess ? "successMode" : ""}
+        ${isPending ? "pendingMode" : ""}
+      `}
+    >
       <Card.Body className="d-flex flex-column align-items-center">
         <Card.Img src={imageLog} className="w-25" />
         <Card.Title className="text-center mb-3 display-6">
@@ -250,13 +258,16 @@ export const PaymentForm = () => {
             <Button
               ref={buttonRef}
               type="submit"
-              className={`confirmPaymentButton mb-2 border-0 d-flex align-items-center justify-content-center ${
-                isAnimated
-                  ? "rounded-circle roundedButton"
-                  : "rounded-pill w-100 p-2"
-              }`}
+              className={`
+                confirmPaymentButton
+                mb-2
+                border-0
+                d-flex
+                align-items-center
+                justify-content-center
+              `}
             >
-              {isAnimated ? (
+              {isPending ? (
                 <Spinner variant="light" animation="border" size="sm" />
               ) : (
                 <>
@@ -268,12 +279,7 @@ export const PaymentForm = () => {
             <p className="fw-lighter d-flex justify-content-center">
               You verify that this info is correct
             </p>
-            <div
-              className={`${
-                isThanks ? "thanksMode" : "opac rounded-circle roundedButton"
-              }`}
-              style={{ top: y, left: x }}
-            >
+            <div className="successContainer" style={{ top: y, left: x }}>
               <div className="successText h-100 d-flex flex-column align-items-center justify-content-center text-white">
                 <img
                   src={flag}

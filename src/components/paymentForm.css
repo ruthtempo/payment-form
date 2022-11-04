@@ -1,56 +1,57 @@
 
 
 /* animated gradient */
+.confirmPaymentButton{
+    background-image: linear-gradient(to right, #667eea, #764ba2, #6B8DD6, #8E37D7);
+    background-size: 200% auto;
+    border-radius: 1.5em !important;
+    width: 100%;
+    height: 3em;
+    z-index:2;
+}
+
 .confirmPaymentButton:hover{
     background-position: 100% 0%;
     transition: all .4s ease-in-out;
 }
 
-
-.confirmPaymentButton{
-    background-image: linear-gradient(to right, #667eea, #764ba2, #6B8DD6, #8E37D7);
+.pendingMode .confirmPaymentButton {
     transition: all 0.4s ease-in-out;
-    background-size: 200% auto;
-    z-index:2;
-}
-
-
-.roundedButton{
     background-image: linear-gradient(to right, #667eea, #8E37D7);
-    width:3em;
-    height:3em;
-    transition: width 0.5s ease-in-out;
+    width: 3em;
+    height: 3em;
 }
-
 
 /* useful for transition to after submit */
+.successContainer{
+    opacity: 0;
+    position:absolute;
+    width: 3em;
+    height: 3em;
+    border-radius: 1.5em
+}
 
-
-.thanksMode{
+.successMode .successContainer{
     background: linear-gradient(to right, #667eea,  #8E37D7);
     /* transition: width 0.5s ease-in-out, height 0.5s ease-in-out, top 0.5s ease-in-out, left 0.5s ease-in-out ; */
     transition: all 0.5s ease-in-out, opacity 0s linear;
+    opacity: 1;
     width:100%;
     height:100%;
     position: absolute;
     overflow:hidden;
     top:0 !important;
     left:0 !important;
-    z-index:5;   
-}
-
-.opac{
-    opacity:0; 
-    position:absolute;
-    z-index:1;
+    z-index:5;
+    border-radius: 0;
 }
 
 .successText{
-    animation:fadeIn 2s;
+    opacity: 0;
+    transition: opacity 1s linear;
+    transition-delay: 1s;
 }
 
-@keyframes fadeIn{
-  from { opacity: 0; }
-  to { opacity: 1; } 
+.successMode .successText{
+    opacity: 1;  
 }
-
