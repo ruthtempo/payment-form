@@ -55,7 +55,7 @@ export const PaymentForm = () => {
     handleSubmit,
     formState: { errors, isSubmitSuccessful },
     getFieldState,
-    reset,
+    // reset,
     watch,
   } = useForm<PaymentDetails>({
     defaultValues: {
@@ -77,12 +77,12 @@ export const PaymentForm = () => {
     if (isSubmitSuccessful) {
       setIsPending(true);
 
-      const timer2 = setTimeout(() => {
+      setTimeout(() => {
         getPosition();
       }, 1000);
       const timer = setTimeout(() => {
         setIsSuccess(true);
-        reset();
+        // reset();
       }, 2000);
       return () => clearTimeout(timer);
     }
