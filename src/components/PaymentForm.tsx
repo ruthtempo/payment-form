@@ -59,11 +59,10 @@ export const PaymentForm = () => {
     watch,
   } = useForm<PaymentDetails>({
     defaultValues: {
-      fullName: "de",
-      cardNumber: "1111111111111111",
-      expirationDate: "1212",
-      cvv: 123,
-      zipCode: "1",
+      fullName: "",
+      cardNumber: "",
+      expirationDate: "",
+      zipCode: "",
     },
   });
 
