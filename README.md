@@ -40,3 +40,5 @@ From a Figma design, I developed a payment form with field and format validation
     └──  index.tsx
 
 ```
+
+[![CodeFactor](https://www.codefactor.io/repository/github/ruthtempo/payment-form/badge)](https://www.codefactor.io/repository/github/ruthtempo/payment-form)
